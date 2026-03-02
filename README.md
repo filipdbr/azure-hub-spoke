@@ -135,6 +135,6 @@ This sandbox is continuously evolving. Here is the current implementation status
 * [x] User-Defined Routes (UDR) to force Spoke traffic through the Hub Firewall
 * [x] Secure remote access via Azure Bastion
 * [x] VMs
-* [ ] DB config + deployment
+* [x] DB config + deployment
+* [x] private DNS for DB
 * [ ] VPN
-* [ ] private DNS for DB
