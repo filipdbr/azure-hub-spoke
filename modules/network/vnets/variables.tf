@@ -19,6 +19,8 @@ variable "tags" {
 }
 
 variable "subnets" {
-  type    = map(string)
-  default = {}
+  type = map(object({
+    address   = string
+    endpoints = list(string)
+  }))
 }

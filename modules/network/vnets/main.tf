@@ -12,5 +12,6 @@ resource "azurerm_subnet" "default" {
   name                 = each.key
   resource_group_name  = azurerm_virtual_network.default.resource_group_name
   virtual_network_name = azurerm_virtual_network.default.name
-  address_prefixes     = [each.value]
+  address_prefixes     = [each.value.address]
+  service_endpoints    = each.value.endpoints
 }
