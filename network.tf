@@ -8,9 +8,9 @@ module "hub_vnet" {
   tags                = local.shared_tags
 
   subnets = {
-    "AzureBastionSubnet"  = "10.1.1.0/26"
-    "GatewaySubnet"       = "10.1.2.0/27"
-    "AzureFirewallSubnet" = "10.1.3.0/26"
+    "AzureBastionSubnet"  = { address = "10.1.1.0/26", endpoints = [] }
+    "GatewaySubnet"       = { address = "10.1.2.0/27", endpoints = [] }
+    "AzureFirewallSubnet" = { address = "10.1.3.0/26", endpoints = [] }
   }
 }
 
@@ -23,11 +23,13 @@ module "spoke_vnet" {
   address_space       = ["10.2.0.0/16"]
   tags                = local.shared_tags
 
+  # initally the idea was to add a service endpoint for SQL db
+  # as later I decided to change to a private endpoint, the endpoints lists are empty
   subnets = {
-    "snet-prod-pl-appgw" = { address = "10.2.1.0/24", endpoints = []}
-    "snet-prod-pl-web"   = { address = "10.2.2.0/24", endpoints = []}
-    "snet-prod-pl-app"   = { address = "10.2.3.0/24", endpoints = []}
-    "snet-prod-pl-db"    = { address = "10.2.4.0/24", endpoints = ["Microsoft.Sql"]}
+    "snet-prod-pl-appgw" = { address = "10.2.1.0/24", endpoints = [] }
+    "snet-prod-pl-web"   = { address = "10.2.2.0/24", endpoints = [] }
+    "snet-prod-pl-app"   = { address = "10.2.3.0/24", endpoints = [] }
+    "snet-prod-pl-db"    = { address = "10.2.4.0/24", endpoints = [] }
   }
 }
 
