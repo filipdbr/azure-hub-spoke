@@ -26,7 +26,7 @@ resource "azurerm_private_endpoint" "db" {
   name                = "private-endpoint-${var.db_name}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.db_subnet
+  subnet_id           = var.db_subnet_id
 
   private_service_connection {
     name                           = "sql-privatelink"

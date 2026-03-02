@@ -37,7 +37,7 @@ variable "tags" {
   default = {}
 }
 
-variable "db_subnet" {
+variable "db_subnet_id" {
   type = string
 }
 
