@@ -30,3 +30,16 @@ variable "app_servers_admin_pwd" {
   sensitive   = true
   default     = "testPass123" # todo: remove later so the user can define it
 }
+
+variable "db_admin_login" {
+  type        = string
+  description = "define your db admin login"
+  default     = "sa"
+}
+
+variable "db_pwd" {
+  type        = string
+  description = "define your password to the database"
+  sensitive   = true
+  default     = "testPass123" # todo: remove later so the user can define it
+}
