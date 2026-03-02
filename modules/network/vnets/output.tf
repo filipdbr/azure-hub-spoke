@@ -7,7 +7,7 @@ output "vnet_id" {
 }
 
 output "subnets" {
-  value = azurerm_subnet.default
+  value       = azurerm_subnet.default
   description = "Map of created subnets"
 }
 
