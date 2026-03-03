@@ -3,7 +3,7 @@ variable "location" {
   description = "main region for all Azure resources"
 }
 
-variable "sku" {
+variable "vmss_size" {
   type        = string
   description = "our default SKU - great value for money and perfect for testing purposes"
 }
@@ -34,7 +34,7 @@ variable "app_servers_admin_pwd" {
 variable "db_admin_login" {
   type        = string
   description = "define your db admin login"
-  default     = "sa"
+  default     = "dbadmin"
 }
 
 variable "db_pwd" {
