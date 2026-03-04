@@ -2,7 +2,7 @@
 # This module is commented out by default. To deploy, uncomment the block below.
 # Detailed instructions can be found in the project README
 
-
+/*
 module "vpn_gateway" {
   source              = "./modules/network/vpn"
   location            = var.location
@@ -19,3 +19,4 @@ module "vpn_gateway" {
   # Bezpieczeństwo
   shared_key = var.shared_key_vpn
 }
+*/
