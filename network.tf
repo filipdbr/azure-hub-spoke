@@ -36,6 +36,8 @@ module "spoke_vnet" {
 # set up peering
 module "peering" {
   source = "./modules/network/peering"
+  use_remote_gateway    = false # change to true only if you're deploying VPN
+  allow_gateway_transit = false # change to true only if you're deploying VPN
 
   # vnet 1 : hub
   vnet1_name_hub    = module.hub_vnet.vnet_name

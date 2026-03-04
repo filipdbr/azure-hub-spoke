@@ -23,3 +23,13 @@ variable "vnet2_id_spoke" {
 variable "vnet2_rg_name_spoke" {
   type = string
 }
+
+variable "use_remote_gateway" {
+  type    = bool
+  default = false
+}
+
+variable "allow_gateway_transit" {
+  type    = bool
+  default = false
+}
