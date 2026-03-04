@@ -54,6 +54,19 @@ resource "azurerm_application_gateway" "web" {
     protocol              = "Http"
     request_timeout       = 60
     cookie_based_affinity = "Disabled"
+    probe_name = "hp-web-app-status"
+    pick_host_name_from_backend_address = true
+  }
+
+  probe {
+    name                = "hp-web-app-status"
+    protocol            = "Http"
+    path                = "/"
+    interval            = 30
+    timeout             = 30
+    unhealthy_threshold = 3
+    # mandatory for VMSS 
+    pick_host_name_from_backend_http_settings = true
   }
 
   http_listener {
