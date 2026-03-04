@@ -38,14 +38,14 @@ module "peering" {
   source = "./modules/network/peering"
 
   # vnet 1 : hub
-  vnet1_name    = module.hub_vnet.vnet_name
-  vnet1_id      = module.hub_vnet.vnet_id
-  vnet1_rg_name = module.hub_vnet.rg
+  vnet1_name_hub    = module.hub_vnet.vnet_name
+  vnet1_id_hub      = module.hub_vnet.vnet_id
+  vnet1_rg_name_hub = module.hub_vnet.rg
 
   # vnet 2 : spoke
-  vnet2_name    = module.spoke_vnet.vnet_name
-  vnet2_id      = module.spoke_vnet.vnet_id
-  vnet2_rg_name = module.spoke_vnet.rg
+  vnet2_name_spoke    = module.spoke_vnet.vnet_name
+  vnet2_id_spoke      = module.spoke_vnet.vnet_id
+  vnet2_rg_name_spoke = module.spoke_vnet.rg
 }
 
 # set up routing to firewall

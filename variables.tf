@@ -43,3 +43,23 @@ variable "db_pwd" {
   sensitive   = true
   default     = "testPass123" # todo: remove later so the user can define it
 }
+
+variable "shared_key_vpn" {
+  type      = string
+  sensitive = true
+}
+
+variable "office_city" {
+  type = string
+}
+
+variable "pip_office" {
+  type        = string
+  description = "public IP of the office"
+}
+
+variable "office_address_space" {
+  type        = list(string)
+  description = "address space of your office"
+  default     = []
+}
