@@ -1,18 +1,12 @@
-resource "azurerm_orchestrated_virtual_machine_scale_set" "web_servers" {
+resource "azurerm_linux_virtual_machine_scale_set" "web_servers" {
   name                        = var.name
   location                    = var.location
   resource_group_name         = var.resource_group_name
-  platform_fault_domain_count = 1
-  sku_name                    = var.sku_name
-
-  os_profile {
-    linux_configuration {
-      admin_username                  = var.admin_name
-      admin_password                  = var.admin_pwd
-      disable_password_authentication = false
-    }
-    custom_data = var.custom_data
-  }
+  sku = var.sku_name
+  instances = 2
+  admin_username = var.admin_name
+  admin_password = var.admin_pwd
+  disable_password_authentication = false
 
   source_image_reference {
     publisher = "Canonical"
@@ -37,6 +31,8 @@ resource "azurerm_orchestrated_virtual_machine_scale_set" "web_servers" {
       application_gateway_backend_address_pool_ids = [var.application_gateway_backend_pool_id]
     }
   }
+
+  custom_data = var.custom_data
 
   tags = var.tags
 }

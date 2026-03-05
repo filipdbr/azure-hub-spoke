@@ -9,7 +9,7 @@ module "web_servers" {
   storage_type                        = var.storage_account_type
   subnet_id                           = module.spoke_vnet.subnets["snet-prod-pl-web"].id
   tags                                = local.shared_tags
-  application_gateway_backend_pool_id = module.app_gw.app_gateway_backend_address_pool_id
+  application_gateway_backend_pool_id = module.app_gw.backend_address_pool_id
 }
 
 module "app_servers" {
