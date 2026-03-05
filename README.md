@@ -28,18 +28,22 @@ The goal is to practice various scenarius, which is helpfull during AZ-104 exam 
 ![Conceptual diagram](docs/architecture_concept.png "Conceptual diagram")
 
 ### Diagram Legend & Traffic Flows
-* **Continuous Green ($\longrightarrow$):** **External HTTP/HTTPS Traffic** – User requests from the Internet to the Web Tier.
-* **Dashed Green ($--\rightarrow$):** **Internal Backend Traffic** – Load-balanced communication between Web and App layers.
-* **Dotted Teal ($\dots\dots$):** **Private Link (SQL Access)** – Fully isolated database connectivity (Zero Public Access).
-* **Dashed Orange ($--\rightarrow$):** **Traffic Steering (UDR)** – Logic forcing all traffic to the Firewall.
-* **Continuous Orange ($\longrightarrow$):** **Inspected Egress** – Filtered outbound traffic leaving to the Internet.
-* **Continuous Black ($\longrightarrow$):** **Management Ingress** – Secure entry points for Admins (Bastion) and VPN.
-* **Dashed Blue ($--\rightarrow$):** **VNet Peering** – Private Azure backbone connecting Hub and Spoke.
+* **Continuous Green:** **External HTTP/HTTPS Traffic** – User requests from the Internet to the Web Tier.
+* **Dashed Green:** **Internal Backend Traffic** – Load-balanced communication between Web and App layers.
+* **Dotted Teal:** **Private Link (SQL Access)** – Fully isolated database connectivity (Zero Public Access).
+* **Dashed Orange:** **Traffic Steering (UDR)** – Logic forcing all traffic to the Firewall.
+* **Continuous Orange:** **Inspected Egress** – Filtered outbound traffic leaving to the Internet.
+* **Continuous Black:** **Management Ingress** – Secure entry points for Admins (Bastion) and VPN.
+* **Dashed Blue:** **VNet Peering** – Private Azure backbone connecting Hub and Spoke.
+
+## Resource Visualizer (Live Environment)
+This is an automated export of the resources as they appear in the Azure Portal after a successful deployment. It shows the real-time complexity and naming conventions of the sandbox.
+
+![Azure Resource Visualization](docs/azure_resource_visualizer.png)
 
 ## Key Features
 
-This lab isn't just a simple VM deployment. It includes several real-world Azure configurations:
-* **True Hub & Spoke**: Two peered VNets with isolated roles.
+* **Hub & Spoke Achitecture**: Two peered VNets with isolated roles.
 * **Hybrid Load Balancing**: A public **Application Gateway** for the Web layer and a private **Internal Load Balancer** for the App layer.
 * **Traffic Control (UDR)**: Custom routing that forces all internet-bound traffic through the **Azure Firewall** for inspection.
 * **Zero Public IPs on VMs**: All virtual machines are kept in private subnets. Access is managed strictly via **Azure Bastion**.
@@ -54,7 +58,7 @@ This environment is built on a Hub & Spoke architecture, with traffic routing ma
 The end user requests enter the system through the **Application Gateway's** Public IP. As a Layer 7 load balancer, it evaluates the traffic and routes it to the **Web Tier** (Virtual Machine Scale Set) located in the `snet-prod-pl-appgw` subnet.
 
 ### 2. Internal Communication
-Communication between the Web and Application tiers is handled by an **Internal Load Balancer (ILB)**. This ensures that requests are distributed efficiently across **App VMs** and provides redundancy across different Availability Zones.
+Communication between the Web and Application tiers is handled by an **Internal Load Balancer**. This ensures that requests are distributed efficiently across **App VMs** and provides redundancy across different Availability Zones.
 
 ### 3. Outbound Traffic and Management (Internal)
 * **Centralized Inspection**: All outbound traffic from the Spoke network is redirected to the **Azure Firewall** in the Hub via **User-Defined Routes (UDR)**. This allows for centralized monitoring and traffic filtering.
@@ -68,12 +72,13 @@ Communication between the Web and Application tiers is handled by an **Internal 
 
 ## Important: Beware of Your Budget!
 
-Please be aware that hosting this infrasture in Azure is not free. This project uses some "Enterprise-grade" resources to give you a real-world experience, and Microsoft charges for them by the hour.
+Please be aware that hosting this infrastructure in Azure is not free. This project uses some "Enterprise-grade" resources to give you a real-world experience, and Microsoft charges for them by the hour.
 
 ### The Most Expensive Resources
-* **Azure Firewall**: This is the most expensive part of the lab (roughly $0.90/hr).
-* **Application Gateway & Bastion**: These are mid-range costs (about $0.20 - $0.25/hr). They are essential for the architecture, but they add up over time.
-* **Virtual Machines**: These are relatively cheap (~$0.05/hr), but remember they still charge you as long as they exist.
+* **Azure Firewall**: This is the most expensive part of the lab (roughly **$0.90/hr**).
+* **Application Gateway & Bastion**: These are mid-range costs (about **$0.20 - $0.25/hr**). They are essential for the architecture, but they add up over time.
+* **Virtual Machines**: These are relatively cheap (~**$0.05/hr**), but remember they still charge you as long as they exist.
+* **Virtual Network Gateway (VPN)**: If you decide to enable the optional VPN module, be aware it is also quite expensive (starting at ~**$0.19/hr**). It is **disabled by default** to protect your credits.
 
 ### Tips:
 1. **The "Golden Rule"**: Always run `terraform destroy` the moment you finish your practice session. Don't leave it for "tomorrow."
@@ -144,7 +149,7 @@ Follow these steps:
 
 **Note: Don't forget to run `terraform destroy` when you're done practicing to avoid unnecessary cloud charges!*
 
-## ⚙️ Customization (Regional Quotas & Sizing)
+## Customization (Regional Quotas & Sizing)
 
 Depending on your Azure subscription type (e.g., Free Trial, Student), you might face **vCPU Quota limits** in certain regions. You can easily customize the deployment to fit your available quotas by modifying the `terraform.tfvars` file.
 
@@ -166,7 +171,7 @@ Once Terraform finishes the deployment, you can run these simple tests to make s
 ### 1. Check the Web Entrance
 Copy the **Public IP of the Application Gateway** (find it in the Azure Portal or via Terraform outputs) and paste it into your browser. You should see the default page of your Web VMs. This confirms the App Gateway and VMSS are talking to each other.
 
-### 2. Test the "Bouncer" (Azure Firewall)
+### 2. Test the Firewall
 Log in to one of your VMs via **Azure Bastion**. Open the terminal and try to ping a public website or run `curl -I https://www.google.com`. 
 * If it works: The traffic is successfully leaving the network.
 * Advanced: Check the Firewall logs in the Portal to see your request being "allowed" and routed through the Hub.
@@ -177,7 +182,7 @@ In the Portal, manually stop one of your App VMs. Refresh the Application Gatewa
 ### 4. Management Access
 Try to connect to a VM using its private IP through the **Bastion** service. If you can get in without a Public IP assigned to the VM itself, your management plane is secure and working.
 
-## 🌐 Optional: Hybrid Connectivity (VPN)
+## Optional: Hybrid Connectivity (VPN)
 
 This project includes a fully scripted **Site-to-Site VPN** module to simulate connecting an On-Premises office to your Azure environment. 
 
