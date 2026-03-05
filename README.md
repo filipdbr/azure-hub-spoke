@@ -113,15 +113,18 @@ Once installed, verify it by running:
 `terraform -version` in CLI.
 
 ## Secrets Management
-To follow security best practices, sensitive data (passwords, VPN keys) is **not** stored in the main `terraform.tfvars` file.
 
-### How to handle passwords:
-1. Create a local file named `secret.tfvars` (this file is already ignored by git).
-2. Copy the structure from `secret.tfvars.example`.
-3. Fill in your own passwords.
-4. Run terraform with the additional var-file flag:
+To follow security best practices, sensitive data is separated from the main configuration.
+
+### Where are the credentials?
+* **Logins**: Defined in `terraform.tfvars` (e.g., `login_app_servers`). These are public and part of the infrastructure definition.
+* **Passwords**: Defined **only** in your local `secret.tfvars` file.
+
+### Setup:
+1. Copy `secret.tfvars.example` to `secret.tfvars`.
+2. Fill in your chosen passwords for the VMs and SQL Server.
+3. Deploy using the var-file flag:
    ```bash
-   terraform plan -var-file="secret.tfvars"
    terraform apply -var-file="secret.tfvars"
    ```
 
@@ -145,7 +148,8 @@ The project follows a modular architecture to ensure maintainability and a clear
 | file | responsibility |
 | :--- | :--- |
 | main.tf | orchestrates all module calls and initializes resource groups |
-| network.tf / security.tf / ... | high-level managers linking modules together |
+| security.tf | deploys bastion, public ips, and orchestrates firewall policy rules |
+| network.tf / loadbalancing.tf | high-level managers linking modules together |
 | outputs.tf | defines terminal data, including the app gateway access link |
 | variables.tf | global declarations for skus, regions, and naming |
 | terraform.tfvars | default non-sensitive values (location, instance types) |
@@ -164,6 +168,18 @@ Follow these steps:
    `terraform apply`
 
 **Note: Don't forget to run `terraform destroy` when you're done practicing to avoid unnecessary cloud charges!*
+
+   ## Accessing the VMs
+
+All Virtual Machines in this lab are isolated (no Public IPs). To manage them, use **Azure Bastion**:
+
+1. Go to the **Azure Portal** and navigate to the `rg-spoke` resource group.
+2. Select the VM you want to access (e.g., `vm-prod-pl-app-0`).
+3. Click **Connect** in the top menu, then select **Bastion**.
+4. Enter the credentials from your `secret.tfvars`(password) and `terraform.tfvars` (login) files.
+5. Click **Connect** – a secure terminal session will open in your browser.
+
+*Note: For Scale Set (VMSS) instances, go to the VMSS resource -> **Instances** -> Click a specific instance -> **Connect**.*
 
 ## Customization (Regional Quotas & Sizing)
 
@@ -197,6 +213,14 @@ In the Portal, manually stop one of your App VMs. Refresh the Application Gatewa
 
 ### 4. Management Access
 Try to connect to a VM using its private IP through the **Bastion** service. If you can get in without a Public IP assigned to the VM itself, your management plane is secure and working.
+
+### 5. Database Connectivity (Private Link)
+Since the SQL Database has no public access, you must test it from the **App VM**:
+1. Connect to an **App VM** via Bastion.
+2. Run `nslookup sql-server-prod-pl.database.windows.net`.
+   * **Success**: You should see a private IP (e.g., `10.1.3.x`).
+3. Run `nc -zv sql-server-prod-pl.database.windows.net 1433`.
+   * **Success**: You should see `Connection to ... succeeded!`.
 
 ## Optional: Hybrid Connectivity (VPN)
 
