@@ -15,7 +15,7 @@ variable "storage_account_type" {
 
 variable "vmss_admin_pwd" {
   type        = string
-  description = "define your password to web-servers"
+  description = "password to web-servers"
   sensitive   = true
 }
 
@@ -25,7 +25,7 @@ variable "app_server_size" {
 
 variable "app_servers_admin_pwd" {
   type        = string
-  description = "define your password to web-servers"
+  description = "password to app-servers"
   sensitive   = true
 }
 
@@ -37,12 +37,13 @@ variable "db_admin_login" {
 
 variable "db_pwd" {
   type        = string
-  description = "define your password to the database"
+  description = "password to the database"
   sensitive   = true
 }
 
 variable "shared_key_vpn" {
   type      = string
+  description = "shared key defined by user"
   sensitive = true
 }
 
